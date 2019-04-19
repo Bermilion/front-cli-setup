@@ -10,7 +10,7 @@ if os.path.exists(directory) != 'true':
     os.mkdir(directory)
     os.chdir(directory)
     print (os.getcwd())
-    # os.system('git clone ')
+    os.system('git clone https://github.com/Bermilion/front-cli.git')
 
 if os.path.exists('/usr/local/bin/pip'):
     os.system('pip -V')
