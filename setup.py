@@ -2,10 +2,45 @@
 
 import os
 import subprocess
+import json
 
 env = os.environ
 downloader = 'curl' if os.path.exists('/usr/bin/curl') else 'wget'
 directory = env['HOME'] + '/.front-cli'
+
+def confSQL():
+    os.chdir(directory)
+    with open('conf.json', 'w') as file:
+        pass
+    print ('Конфигурациооный файл создан')
+
+    # subprocess.call(['touch', 'conf.json'])
+    print('Настройка файла конфигурации')
+    print ('\nАвтаризационные данные mySQL \nпо умолчанию login: root, password: 0000\n')
+
+    login = 'root'
+    password = '0000'
+
+    def sqlData(login, password):
+        with open('conf.json', 'a') as file:
+            mySqlData = {
+                "mysql": {
+                    "login": login,
+                    "password": password
+                }
+            }
+            json.dump(mySqlData, file, sort_keys=True, indent=4)
+
+    choiceMySQLAuth = raw_input('[Да/нет]:')
+    if len(
+            choiceMySQLAuth) == 0 or choiceMySQLAuth == 'да' or choiceMySQLAuth == 'Да' or choiceMySQLAuth == 'Д' or choiceMySQLAuth == 'y' or choiceMySQLAuth == 'Y' or choiceMySQLAuth == 'yes' or choiceMySQLAuth == 'Yes':
+        print ('По умолчанию')
+    else:
+        login = raw_input('Логин: ')
+        password = raw_input('Пароль: ')
+        print (login, password)
+
+    sqlData(login, password)
 
 if os.path.exists(directory):
     print ('Update')
@@ -29,6 +64,7 @@ else:
 
 def installExtentions ():
     os.system('pip install click')
+    confSQL()
 
 if os.path.exists('/usr/local/bin/pip'):
     installExtentions()
