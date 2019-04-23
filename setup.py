@@ -8,40 +8,6 @@ env = os.environ
 downloader = 'curl' if os.path.exists('/usr/bin/curl') else 'wget'
 directory = env['HOME'] + '/.front-cli'
 
-def confSQL():
-    os.chdir(directory)
-    with open('conf.json', 'w') as file:
-        pass
-    print ('Конфигурациооный файл создан')
-
-    # subprocess.call(['touch', 'conf.json'])
-    print('Настройка файла конфигурации')
-    print ('\nАвтаризационные данные mySQL \nпо умолчанию login: root, password: 0000\n')
-
-    login = 'root'
-    password = '0000'
-
-    def sqlData(login, password):
-        with open('conf.json', 'a') as file:
-            mySqlData = {
-                "mysql": {
-                    "login": login,
-                    "password": password
-                }
-            }
-            json.dump(mySqlData, file, sort_keys=True, indent=4)
-
-    choiceMySQLAuth = raw_input('[Да/нет]:')
-    if len(
-            choiceMySQLAuth) == 0 or choiceMySQLAuth == 'да' or choiceMySQLAuth == 'Да' or choiceMySQLAuth == 'Д' or choiceMySQLAuth == 'y' or choiceMySQLAuth == 'Y' or choiceMySQLAuth == 'yes' or choiceMySQLAuth == 'Yes':
-        print ('По умолчанию')
-    else:
-        login = raw_input('Логин: ')
-        password = raw_input('Пароль: ')
-        print (login, password)
-
-    sqlData(login, password)
-
 if os.path.exists(directory):
     print ('Update')
     os.chdir(directory)
@@ -56,15 +22,8 @@ else:
     with open('.bashrc', 'a') as file:
         file.write('alias front="python /usr/local/bin/cli.py"\n')
 
-    os.chdir(directory)
-    subprocess.call(['touch', 'conf'])
-    print('Настройка файла конфигурации')
-    with open('conf', 'a') as file:
-        file.write('[mysql]\n')
-
 def installExtentions ():
     os.system('pip install click')
-    confSQL()
 
 if os.path.exists('/usr/local/bin/pip'):
     installExtentions()
@@ -77,3 +36,63 @@ else:
     os.system('pip install -U pip')
     installExtentions()
 
+# Настройка конфигурации
+os.chdir(directory)
+with open('conf.json', 'w') as file:
+    pass
+print ('Конфигурациооный файл создан')
+
+print('Настройка файла конфигурации')
+print ('Автаризационные данные mySQL\n')
+
+login = 'root'
+password = '0000'
+
+def sqlData(login, password):
+    with open('conf.json', 'a') as file:
+        data = {
+            "mysql": {
+                "login": login,
+                "password": password
+            }
+        }
+        json.dump(data, file, sort_keys=True, indent=4)
+
+choiceMySQLAuth = raw_input('По умолчанию login: root, password: 0000 [Да/нет]:')
+if len(choiceMySQLAuth) == 0 or choiceMySQLAuth == 'да' or choiceMySQLAuth == 'Да' or choiceMySQLAuth == 'Д' or choiceMySQLAuth == 'y' or choiceMySQLAuth == 'Y' or choiceMySQLAuth == 'yes' or choiceMySQLAuth == 'Yes':
+    print ('Применины настройки по умолчанию')
+else:
+    login = raw_input('Логин: ')
+    password = raw_input('Пароль: ')
+    print (login, password)
+
+sqlData(login, password)
+
+
+# настройка корневой директории
+defaultRootDir = env['HOME'] + '/sites'
+rootDir = raw_input('\nУказать корневую директорию для проектов?\n\n0 — не создаст корневой директории.\n1 — ' + defaultRootDir + '\nИли введите свой вариант (необходимо ввести полный путь):')
+
+def createRootDirKey(dir):
+    os.chdir(directory)
+
+    with open('conf.json', 'r') as file:
+        data = json.load(file)
+        data['root-dir'] = dir
+
+        with open('conf.json', 'w') as file:
+            json.dump(data, file, sort_keys=True, indent=4)
+
+def dirExists(path):
+    if os.path.exists(path):
+        createRootDirKey(path)
+    else:
+        os.mkdir(path)
+        createRootDirKey(path)
+
+if rootDir == '0':
+    print ('Инициализация будет происходить относительно текущего терминального пути.')
+elif rootDir == '1':
+    dirExists(defaultRootDir)
+else:
+    dirExists(rootDir)
