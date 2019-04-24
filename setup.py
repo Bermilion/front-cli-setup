@@ -18,6 +18,7 @@ else:
     print (os.getcwd())
     os.system('git clone https://github.com/Bermilion/front-cli.git ./')
     subprocess.call(['/usr/bin/pkexec', 'ln', '-s', directory + '/cli.py', '/usr/local/bin'])
+    os.mkdir(directory + '/presets')
     os.chdir(env['HOME'])
     with open('.bashrc', 'a') as file:
         file.write('alias front="python /usr/local/bin/cli.py"\n')
@@ -45,28 +46,28 @@ print ('Конфигурациооный файл создан')
 print('Настройка файла конфигурации')
 print ('Автаризационные данные mySQL\n')
 
-login = 'root'
+user = 'root'
 password = '0000'
 
 def sqlData(login, password):
     with open('conf.json', 'a') as file:
         data = {
             "mysql": {
-                "login": login,
+                "user": login,
                 "password": password
             }
         }
         json.dump(data, file, sort_keys=True, indent=4)
 
-choiceMySQLAuth = raw_input('По умолчанию login: root, password: 0000 [Да/нет]:')
+choiceMySQLAuth = raw_input('По умолчанию user: root, password: 0000 [Да/нет]:')
 if len(choiceMySQLAuth) == 0 or choiceMySQLAuth == 'да' or choiceMySQLAuth == 'Да' or choiceMySQLAuth == 'Д' or choiceMySQLAuth == 'y' or choiceMySQLAuth == 'Y' or choiceMySQLAuth == 'yes' or choiceMySQLAuth == 'Yes':
     print ('Применины настройки по умолчанию')
 else:
-    login = raw_input('Логин: ')
+    user = raw_input('Логин: ')
     password = raw_input('Пароль: ')
-    print (login, password)
+    print (user, password)
 
-sqlData(login, password)
+sqlData(user, password)
 
 
 # настройка корневой директории
