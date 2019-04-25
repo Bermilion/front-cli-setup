@@ -25,6 +25,14 @@ else:
 
 def installExtentions ():
     os.system('pip install click')
+    try:
+        os.system('pip install mysqlclient')
+    except:
+        subprocess.call(['/usr/bin/pkexec', 'apt', 'install', 'python-dev', 'default-libmysqlclient-dev'])
+        try:
+            os.system('pip install mysqlclient')
+        except:
+            print ('Это какая то супер ошибка')
 
 if os.path.exists('/usr/local/bin/pip'):
     installExtentions()
