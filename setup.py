@@ -52,7 +52,7 @@ with open('conf.json', 'w') as file:
 print ('Конфигурациооный файл создан')
 
 print('Настройка файла конфигурации')
-print ('Автаризационные данные mySQL\n')
+print ('Авторизационные данные MySQL\n')
 
 user = 'root'
 password = '0000'
